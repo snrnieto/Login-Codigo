@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+    <div id="login">
+        <h3 class="text-center text-white pt-5">Login form</h3>
+        <div class="container">
+            <div id="login-row" class="row justify-content-center align-items-center">
+                <div id="login-column" class="col-md-6">
+                    <div id="login-box" class="col-md-12">
+
+                        <div id="login-form" class="form" onsubmit="ingresar()">
+                            <h3 class="text-center text-info">Login</h3>
+                            <div class="form-group">
+                                <label for="username" class="text-info">Código:</label><br>
+                                <input type="number" name="codigo" id="codigo" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <input type="submit" onclick="ingresar()" name="submit" class="btn btn-info btn-md" value="Ingresar">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+    <script>
+
+        function ingresar(){
+            
+            codigo=document.getElementById("codigo").value;
+
+            const url="https://cors-anywhere.herokuapp.com/https://informatica.unicatolica.edu.co/cverano/alumno.php?cedula="+codigo+"&ejecutar=Comprobar+ID";
+
+            var html="";
+
+            fetch( url, {
+                mode: 'cors',
+                headers:{
+                    'Access-Control-Allow-Origin':'*',
+                    'Content-Type': 'multipart/form-data'
+                }, 
+            }).then(rsp => rsp.text()).then( rslt => {
+                imprimir(rslt)
+
+            }).catch( err => {
+                console.log("Error")
+                console.log(err)
+            });
+        }
+
+        function imprimir(html){
+            var inicioNombre=html.search("Nombres");
+                
+                if (inicioNombre!=-1){
+                    
+                    var nombreInicio=html.substring(inicioNombre+34,inicioNombre+60)
+                    var finalNombre=nombreInicio.search("td")
+                    var nombreFinal=nombreInicio.substring(0,finalNombre-2).toLowerCase()
+                    nombreFinal=nombreFinal[0].toUpperCase()+ nombreFinal.slice(1);
+                    // console.log("Nombre: "+nombreFinal)
+                    document.body.innerHTML = '<div class="contenedor"><h1>Bienvenido '+nombreFinal+'</h1> </div>'; 
+                }
+                else{
+                    alert("No eres estudiante")
+                }
+        }
+
+        
+
+
+    </script>
+</html>
